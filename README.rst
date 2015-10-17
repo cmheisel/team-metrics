@@ -11,7 +11,7 @@ Team Metrics
 
 Insights and predictions for your agile teams
 
-* Free software: ISC license
+* Free software: MIT license
 * Documentation: https://team_metrics.readthedocs.org.
 
 Features
