@@ -10,7 +10,7 @@ data:
   image: postgres:9.4
   volumes:
     - /var/lib/postgresql
-  command: "true"
+  command: ['/bin/bash', '-c', 'while true; do echo "up" > /dev/null; sleep 60; done']
 web:
   build: .
   volumes:
