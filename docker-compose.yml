@@ -3,6 +3,7 @@ db:
   image: postgres:9.4
   environment:
     - POSTGRES_PASSWORD=p@assword
+    - POSTGRES_DB=team_metrics
   volumes_from:
     - data
 data:
@@ -13,7 +14,7 @@ data:
 web:
   build: .
   volumes:
-      - ./team_metrics:/app/
+      - .:/app/
   ports:
       - "8000:8000"
   links:
