@@ -1,4 +1,7 @@
 from django.db import models
+from django.utils.text import slugify
+
+SLUG_LENGTH = 75
 
 
 class DataSet(models.Model):
@@ -11,8 +14,18 @@ class DataSet(models.Model):
         db_index=True,
     )
     slug = models.SlugField(
-        max_length=75,
+        max_length=SLUG_LENGTH,
+        unique=True,
+        db_index=True,
     )
+
+    def clean_fields(self, *args, **kwargs):
+        if not self.slug and self.name:
+            slug = slugify(self.name)
+            if len(slug) > SLUG_LENGTH:
+                slug = slug[0:SLUG_LENGTH]
+            self.slug = slug
+        super(DataSet, self).clean_fields(*args, **kwargs)
 
     def __str__(self):
         return self.name
