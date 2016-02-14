@@ -27,6 +27,10 @@ class DataSet(models.Model):
             self.slug = slug
         super(DataSet, self).clean_fields(*args, **kwargs)
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(DataSet, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
