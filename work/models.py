@@ -129,6 +129,18 @@ class WorkItem(models.Model):
             return self.ended_at - self.queued_at
         raise ValueError("No lead time for items without an ended_at")
 
+    @property
+    def is_in_progress(self):
+        if self.started_at and not self.ended_at:
+            return True
+        return False
+
+    @property
+    def is_completed(self):
+        if self.started_at and self.ended_at:
+            return True
+        return False
+
     def check_dates(self):
         if self.started_at:
             if self.started_at < self.queued_at:
@@ -141,6 +153,9 @@ class WorkItem(models.Model):
 
     def clean(self):
         self.check_dates()
+        if self.is_completed:
+            self._cycle_time = self.cycle_time
+            self._lead_time = self.lead_time
 
     def save(self, *args, **kwargs):
         self.full_clean()

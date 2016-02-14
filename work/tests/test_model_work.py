@@ -109,3 +109,48 @@ def test_lead_time_in_progress(make_one):
 
     with pytest.raises(ValueError):
         w.lead_time.days
+
+
+def test_computed_times_set(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+    w.started_at = datetime.datetime.now() - datetime.timedelta(days=4)
+    w.ended_at = datetime.datetime.now()
+
+    w.full_clean()
+    assert w._cycle_time
+    assert w._lead_time
+
+
+def test_computed_times_sad(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+
+    w.full_clean()
+    assert w._cycle_time is None
+    assert w._lead_time is None
+
+
+def test_in_progress(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+    w.started_at = datetime.datetime.now() - datetime.timedelta(days=4)
+
+    assert w.is_in_progress is True
+
+
+def test_in_not_progress(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+
+    assert w.is_in_progress is False
+
+
+def test_completed(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+    w.started_at = datetime.datetime.now() - datetime.timedelta(days=4)
+    w.ended_at = datetime.datetime.now()
+
+    assert w.is_in_progress is False
+    assert w.is_completed is True
