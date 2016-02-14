@@ -3,9 +3,11 @@ import pytest
 
 pytestmark = pytest.mark.django_db
 
+
 @pytest.fixture()
 def make_one():
     from work.models import WorkItem, DataSet
+
     def _make_one(key, dataset="test_dataset", queued_at=None):
         if queued_at is None:
             queued_at = datetime.datetime.now()
