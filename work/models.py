@@ -162,12 +162,12 @@ class WorkItem(models.Model):
     def check_dates(self):
         if self.started_at:
             if self.started_at < self.queued_at:
-                raise ValidationError('started_at', "Work on an item must start at/after it is queued.")
+                raise ValidationError({'started_at': "Work on an item must start at/after it is queued."})
         if self.ended_at:
             if self.ended_at < self.queued_at:
-                raise ValidationError('ended_at', "Work on an item must end at/after it is queued.")
+                raise ValidationError({'ended_at': "Work on an item must end at/after it is queued."})
             if self.ended_at < self.started_at:
-                raise ValidationError('ended_at', "Work on an item must end at/after it is started.")
+                raise ValidationError({'ended_at': "Work on an item must end at/after it is started."})
 
     def clean(self):
         self.check_dates()
