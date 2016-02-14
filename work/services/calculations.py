@@ -3,10 +3,12 @@ Functions for doing calculations on/about work objects.
 """
 import datetime
 
+
 def time_between(start_date, end_date):
     if end_date < start_date:
         raise ValueError("Start must pre-date end: {} < {}".format(end_date, start_date))
     return end_date - start_date
+
 
 def sunday_of_week(target_date):
     if target_date.weekday() == 6:

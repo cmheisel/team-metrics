@@ -25,7 +25,7 @@ def test_time_between_unhappy(calculations):
     start_date = datetime.datetime.now()
     end_date = datetime.datetime.now() - datetime.timedelta(days=5)
 
-    with pytest.raises(ValueError) as execinfo:
+    with pytest.raises(ValueError):
         calculations.time_between(start_date, end_date)
 
 sunday_data = [
