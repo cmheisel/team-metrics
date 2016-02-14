@@ -93,6 +93,7 @@ def test_cycle_time_in_progress(make_one):
     with pytest.raises(ValueError):
         w.cycle_time.days
 
+
 def test_lead_time(make_one):
     w = make_one("TEST-1")
     w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
@@ -154,3 +155,20 @@ def test_completed(make_one):
 
     assert w.is_in_progress is False
     assert w.is_completed is True
+
+
+def test_week_dates(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+    w.started_at = datetime.datetime.now() - datetime.timedelta(days=4)
+    w.ended_at = datetime.datetime.now()
+
+    assert w.week_queued_at
+    assert w.week_started_at
+    assert w.ended_at
+
+    w.full_clean()
+
+    assert w._week_queued_at
+    assert w._week_started_at
+    assert w._week_ended_at

@@ -2,6 +2,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 
+from .services.calculations import sunday_of_week
+
 SLUG_LENGTH = 75
 
 
@@ -141,6 +143,22 @@ class WorkItem(models.Model):
             return True
         return False
 
+    @property
+    def week_queued_at(self):
+        return sunday_of_week(self.queued_at)
+
+    @property
+    def week_started_at(self):
+        if self.started_at:
+            return sunday_of_week(self.started_at)
+        return None
+
+    @property
+    def week_ended_at(self):
+        if self.ended_at:
+            return sunday_of_week(self.ended_at)
+        return None
+
     def check_dates(self):
         if self.started_at:
             if self.started_at < self.queued_at:
@@ -157,10 +175,13 @@ class WorkItem(models.Model):
             self._cycle_time = self.cycle_time
             self._lead_time = self.lead_time
 
+        self._week_queued_at = self.week_queued_at
+        self._week_started_at = self.week_started_at
+        self._week_ended_at = self.week_ended_at
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super(WorkItem, self).save(*args, **kwargs)
-
 
     def __str__(self):
         return u"{} / {}".format(self.dataset.name, self.key)
