@@ -20,6 +20,7 @@ def test_time_between_happy(calculations):
     expected = datetime.timedelta(days=5)
     assert calculations.time_between(start_date, end_date).days == expected.days
 
+
 def test_time_between_unhappy(calculations):
     start_date = datetime.datetime.now()
     end_date = datetime.datetime.now() - datetime.timedelta(days=5)
@@ -88,6 +89,8 @@ sunday_data = [
         datetime.datetime(2015, 10, 11)
     ),
 ]
+
+
 @pytest.mark.parametrize("input,expected", sunday_data)
 def test_sunday(calculations, input, expected):
     actual = calculations.sunday_of_week(input)
