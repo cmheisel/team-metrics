@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
 
@@ -115,6 +116,21 @@ class WorkItem(models.Model):
 
     class Meta:
         unique_together = ('key', 'dataset')
+
+    @property
+    def cycle_time(self):
+        if self.ended_at and self.started_at:
+            return self.ended_at - self.started_at
+
+    def check_dates(self):
+        if self.started_at:
+            if self.started_at < self.queued_at:
+                raise ValidationError('started_at', "Work on an item must start at/after it is queued.")
+        if self.ended_at:
+            if self.ended_at < self.queued_at:
+                raise ValidationError('ended_at', "Work on an item must end at/after it is queued.")
+            if self.ended_at < self.started_at:
+                raise ValidationError('ended_at', "Work on an item must end at/after it is started.")
 
     def __str__(self):
         return u"{} / {}".format(self.dataset.name, self.key)
