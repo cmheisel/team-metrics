@@ -83,3 +83,29 @@ def test_cycle_time(make_one):
     w.ended_at = datetime.datetime.now()
 
     assert w.cycle_time.days == 4
+
+
+def test_cycle_time_in_progress(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+    w.started_at = datetime.datetime.now() - datetime.timedelta(days=4)
+
+    with pytest.raises(ValueError):
+        w.cycle_time.days
+
+def test_lead_time(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+    w.started_at = datetime.datetime.now() - datetime.timedelta(days=4)
+    w.ended_at = datetime.datetime.now()
+
+    assert w.lead_time.days == 14
+
+
+def test_lead_time_in_progress(make_one):
+    w = make_one("TEST-1")
+    w.queued_at = datetime.datetime.now() - datetime.timedelta(days=14)
+    w.started_at = datetime.datetime.now() - datetime.timedelta(days=4)
+
+    with pytest.raises(ValueError):
+        w.lead_time.days

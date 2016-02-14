@@ -121,6 +121,13 @@ class WorkItem(models.Model):
     def cycle_time(self):
         if self.ended_at and self.started_at:
             return self.ended_at - self.started_at
+        raise ValueError("No cycle time for items without an ended_at")
+
+    @property
+    def lead_time(self):
+        if self.ended_at and self.queued_at:
+            return self.ended_at - self.queued_at
+        raise ValueError("No lead time for items without an ended_at")
 
     def check_dates(self):
         if self.started_at:
@@ -131,6 +138,14 @@ class WorkItem(models.Model):
                 raise ValidationError('ended_at', "Work on an item must end at/after it is queued.")
             if self.ended_at < self.started_at:
                 raise ValidationError('ended_at', "Work on an item must end at/after it is started.")
+
+    def clean(self):
+        self.check_dates()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(WorkItem, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return u"{} / {}".format(self.dataset.name, self.key)
