@@ -1,4 +1,6 @@
 Django==1.9.2
 psycopg2==2.6.1
+djangorestframework==3.3.2
+Markdown==2.6.5
 
 -r requirements-dev.txt
