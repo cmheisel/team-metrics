@@ -20,4 +20,7 @@ class WorkItemSerializer(serializers.HyperlinkedModelSerializer):
             'ended_at',
             'effort_score',
             'impact_score',
+            'cycle_time',
+            'lead_time',
         )
+        read_only_fields = ('cycle_time', 'lead_time')

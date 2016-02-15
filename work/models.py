@@ -123,13 +123,13 @@ class WorkItem(models.Model):
     def cycle_time(self):
         if self.ended_at and self.started_at:
             return self.ended_at - self.started_at
-        raise ValueError("No cycle time for items without an ended_at")
+        return None
 
     @property
     def lead_time(self):
         if self.ended_at and self.queued_at:
             return self.ended_at - self.queued_at
-        raise ValueError("No lead time for items without an ended_at")
+        return None
 
     @property
     def is_in_progress(self):
